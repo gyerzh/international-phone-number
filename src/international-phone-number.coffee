@@ -10,7 +10,7 @@ angular.module("internationalPhoneNumber", [])
     autoHideDialCode:       true
     autoPlaceholder:        true
     customPlaceholder:      null
-    defaultCountry:         ""
+    initialCountry:         ""
     geoIpLookup:            null
     nationalMode:           true
     numberType:             "MOBILE"
@@ -27,6 +27,7 @@ angular.module("internationalPhoneNumber", [])
   scope:
     ngModel: '='
     country: '='
+    geoIpLookup: '&'
 
   link: (scope, element, attrs, ctrl) ->
 
@@ -61,6 +62,7 @@ angular.module("internationalPhoneNumber", [])
       else
         options[key] = option
 
+    options['geoIpLookup'] = if scope.geoIpLookup then scope.geoIpLookup() else null
     # Wait for ngModel to be set
     watchOnce = scope.$watch('ngModel', (newValue) ->
       # Wait to see if other scope variables were set at the same time
@@ -84,7 +86,7 @@ angular.module("internationalPhoneNumber", [])
 
     scope.$watch('country', (newValue) ->
         if newValue != null && newValue != undefined && newValue != ''
-            element.intlTelInput("selectCountry", newValue)
+            element.intlTelInput("setCountry", newValue)
     )
 
     ctrl.$formatters.push (value) ->
